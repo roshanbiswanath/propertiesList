@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity, Image } from 'react-native';
 import { gql, useMutation } from '@apollo/client';
-import { log } from 'console';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LOGIN = gql`
   mutation Login($email: String!, $password: String!) {
@@ -33,12 +32,34 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-      <TextInput placeholder="Email" value={email} onChangeText={setEmail} style={styles.input} />
-      <TextInput placeholder="Password" value={password} onChangeText={setPassword} style={styles.input} secureTextEntry />
-      <Button title="Login" onPress={handleLogin} disabled={loading} />
-      <Button title="Register" onPress={() => navigation.navigate('Register')} disabled={loading} />
-      {error && <Text style={styles.error}>Error: {error.message}</Text>}
+      <View style={styles.imageContainer}>
+        <Image source={{ uri: 'https://i.pinimg.com/1200x/8b/32/66/8b32663f5c6a2cd5024fa091bf89820c.jpg' }} style={styles.image} />
+      </View>
+      <View style={styles.formContainer}>
+        <Text style={styles.title}>Login</Text>
+        <TextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          style={styles.input}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          style={styles.input}
+          secureTextEntry
+        />
+        <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Register')} disabled={loading}>
+          <Text style={styles.buttonText}>Register</Text>
+        </TouchableOpacity>
+        {error && <Text style={styles.error}>Error: {error.message}</Text>}
+      </View>
     </View>
   );
 }
@@ -46,25 +67,56 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'row',
+    backgroundColor: '#f5f5f5',
+  },
+  imageContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  formContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 16,
   },
   title: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 24,
+    textAlign: 'center',
+    color: '#333',
   },
   input: {
-    borderWidth: 1,
+    height: 50,
     borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-    width: '100%',
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 16,
+    paddingHorizontal: 16,
+    backgroundColor: '#fff',
+  },
+  button: {
+    height: 50,
+    backgroundColor: '#007BFF',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   error: {
     color: 'red',
-    marginTop: 10,
+    textAlign: 'center',
+    marginTop: 16,
   },
 });

@@ -25,6 +25,7 @@ const authLink = setContext(async (_, { headers }) => {
       ...headers,
       authorization: token ? `Bearer ${token}` : "",
     },
+    cache: 'no-cache',
   };
 });
 
@@ -34,7 +35,7 @@ const client = new ApolloClient({
 });
 
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [token, setToken] = useState('');
   const checkAuth = async () => {
     const token = await AsyncStorage.getItem('token');
@@ -52,8 +53,8 @@ export default function App() {
   return (
     <ApolloProvider client={client}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={token ? "Home" : "Login"}>
-          <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Navigator initialRouteName={token ? "Home" : "Home"}>
+          <Stack.Screen name="Login" component={ LoginScreen } />
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Details" component={HouseDetails} />
           <Stack.Screen name="AddHouse" component={AddHouseForm} />
